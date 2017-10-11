@@ -6,7 +6,7 @@
   "scripts": {
     "build": "rm -rf dist/* && webpack",
     "coverage": "./node_modules/.bin/babel-node ./node_modules/.bin/babel-istanbul cover ./node_modules/.bin/_mocha test/tests/integration/bootstrap.test.js test/tests/**/*.test.js",
-    "release": "standard-version",
+    "release": "npm run build && standard-version",
     "test": "mocha --recursive --compilers js:babel-register --require babel-polyfill test/tests/**/*.test.js",
     "unit": "mocha --recursive --compilers js:babel-register --require babel-polyfill test/tests/unit/**/*.test.js"
   },

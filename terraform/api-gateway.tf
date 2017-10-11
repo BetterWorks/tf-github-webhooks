@@ -1,6 +1,6 @@
 # base api gateway resource
 resource "aws_api_gateway_rest_api" "github" {
-  name        = "codebuild-webhook-github"
+  name        = "${var.name}"
   description = "API for github webhooks"
 }
 

@@ -1,7 +1,7 @@
 # lambda function that proceses incoming webhooks from github, verifies signature
 # and publishes to sns
 resource "aws_lambda_function" "publish" {
-  function_name    = "codebuild-webhook-publish"
+  function_name    = "${var.name}"
   description      = "publish github events to sns"
   role             = "${aws_iam_role.publish.arn}"
   handler          = "publish.handler"
@@ -34,60 +34,59 @@ resource "random_id" "github_secret" {
 # include cloudwatch log group resource definition in order to ensure it is
 # removed with function removal
 resource "aws_cloudwatch_log_group" "publish" {
-  name = "/aws/lambda/codebuild-webhook-publish"
+  name = "/aws/lambda/${var.name}"
 }
 
 # iam role for publish lambda function
 resource "aws_iam_role" "publish" {
-  name = "codebuild-webhook-publish"
+  name = "${var.name}"
 
-  assume_role_policy = <<POLICY
-{
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Sid": "",
-      "Effect": "Allow",
-      "Principal": {
-        "Service": ["apigateway.amazonaws.com","lambda.amazonaws.com"]
-      },
-      "Action": "sts:AssumeRole"
-    }
-  ]
+  assume_role_policy = "${data.aws_iam_policy_document.assume_role.json}"
 }
-POLICY
+
+data "aws_iam_policy_document" "assume_role" {
+  statement {
+    actions = ["sts:AssumeRole"]
+    effect  = "Allow"
+
+    principals {
+      type        = "Service"
+      identifiers = ["apigateway.amazonaws.com", "lambda.amazonaws.com"]
+    }
+  }
 }
 
 # iam policy for lambda function allowing it to publish events to SNS and logs
 # to cloudwatch
 resource "aws_iam_policy" "publish" {
-  name = "codebuild-webhook-publish"
+  name = "${var.name}"
 
-  policy = <<POLICY
-{
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Effect": "Allow",
-      "Action": [
-        "sns:Publish"
-      ],
-      "Resource": [
-        "${aws_sns_topic.github.arn}"
-      ]
-    },
-    {
-      "Effect": "Allow",
-      "Action": [
-        "logs:CreateLogGroup",
-        "logs:CreateLogStream",
-        "logs:PutLogEvents"
-      ],
-      "Resource": "*"
-    }
-  ]
+  policy = "${data.aws_iam_policy_document.publish.json}"
 }
-POLICY
+
+data "aws_iam_policy_document" "publish" {
+  statement {
+    actions = [
+      "sns:Publish",
+    ]
+
+    effect = "Allow"
+
+    resources = [
+      "${aws_sns_topic.github.arn}",
+    ]
+  }
+
+  statement {
+    actions = [
+      "logs:CreateLogGroup",
+      "logs:CreateLogStream",
+      "logs:PutLogEvents",
+    ]
+
+    effect    = "Allow"
+    resources = ["*"]
+  }
 }
 
 # attach publish policy to publish role

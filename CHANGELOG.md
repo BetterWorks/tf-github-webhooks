@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="1.2.0"></a>
+# [1.2.0](https://github.com/cludden/ks-tf-github-webhooks/compare/v1.1.1...v1.2.0) (2017-10-11)
+
+
+### Features
+
+* adds "name" required variable ([9cfa705](https://github.com/cludden/ks-tf-github-webhooks/commit/9cfa705))
+
+
+
 <a name="1.1.1"></a>
 ## [1.1.1](https://github.com/cludden/ks-tf-github-webhooks/compare/v1.1.0...v1.1.1) (2017-10-11)
 

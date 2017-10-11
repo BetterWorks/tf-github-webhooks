@@ -1,0 +1,46 @@
+{
+  "name": "ks-tf-github-webhooks",
+  "version": "1.0.0",
+  "description": "tf project for codebuild webhook infrastructure",
+  "main": "index.js",
+  "scripts": {
+    "build": "rm -rf dist/* && webpack",
+    "coverage": "./node_modules/.bin/babel-node ./node_modules/.bin/babel-istanbul cover ./node_modules/.bin/_mocha test/tests/integration/bootstrap.test.js test/tests/**/*.test.js",
+    "release": "standard-version",
+    "test": "mocha --recursive --compilers js:babel-register --require babel-polyfill test/tests/**/*.test.js",
+    "unit": "mocha --recursive --compilers js:babel-register --require babel-polyfill test/tests/unit/**/*.test.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cludden/ks-tf-github-webhooks.git"
+  },
+  "author": "chris ludden",
+  "license": "UNLICENSED",
+  "bugs": {
+    "url": "https://github.com/cludden/ks-tf-github-webhooks/issues"
+  },
+  "homepage": "https://github.com/cludden/ks-tf-github-webhooks#readme",
+  "devDependencies": {
+    "babel-cli": "^6.24.1",
+    "babel-core": "^6.24.1",
+    "babel-istanbul": "^0.12.2",
+    "babel-loader": "^7.0.0",
+    "babel-plugin-add-module-exports": "^0.2.1",
+    "babel-plugin-transform-object-rest-spread": "^6.23.0",
+    "babel-polyfill": "^6.23.0",
+    "babel-preset-env": "^1.4.0",
+    "babel-register": "^6.24.1",
+    "chai": "^3.5.0",
+    "eslint": "^3.19.0",
+    "eslint-config-airbnb-base": "^11.1.3",
+    "eslint-plugin-import": "^2.2.0",
+    "mocha": "^3.3.0",
+    "sinon": "^2.2.0",
+    "standard-version": "^4.0.0",
+    "webpack": "^2.5.1"
+  },
+  "dependencies": {
+    "aws-sdk": "^2.50.0",
+    "lodash": "https://registry.npmjs.org/lodash/-/lodash-4.17.4.tgz"
+  }
+}

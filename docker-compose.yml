@@ -1,0 +1,15 @@
+version: '2'
+services:
+  ks-tf-github-webhooks:
+    build:
+      context: .
+      dockerfile: ./test/Dockerfile.test
+    command: npm test
+    environment:
+      NODE_ENV: test
+      SECRET: 'SECRET'
+      SNS_TOPIC_ARN: 'abcdefg'
+    volumes:
+      - ./coverage:/opt/app/coverage
+      - ./lib:/opt/app/lib
+      - ./test:/opt/app/test

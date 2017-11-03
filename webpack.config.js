@@ -3,7 +3,7 @@ const webpack = require('webpack');
 module.exports = {
   target: 'node',
   entry: {
-    publish: ['babel-polyfill', './lib/publish.js'],
+    index: './src/index.js',
   },
   output: {
     filename: '[name].js',
@@ -12,7 +12,12 @@ module.exports = {
   },
   module: {
     rules: [
-      { test: /\.js$/, use: 'babel-loader' },
+      {
+        test: /\.js$/,
+        use: {
+          loader: 'babel-loader',
+        },
+      },
     ],
   },
   plugins: [

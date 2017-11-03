@@ -1,0 +1,11 @@
+digraph architecture {
+  rankdir=LR
+  github [label="Github" shape="egg" fillcolor="orchid1" style="filled"]
+  api [label="API Gateway" shape="ellipse" fillcolor="gold" style="filled"]
+  fn [label="Github Webhook (λ)" shape="rect" fillcolor="darkorange" style="filled"]
+  sns [label="Github Topic (SNS)" shape="cds" fillcolor="plum" style="filled"]
+
+  github->api
+  api->fn
+  fn->sns
+}

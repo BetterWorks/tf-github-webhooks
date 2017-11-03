@@ -1,13 +1,12 @@
+FROM node:6
 
-FROM node:6.10
+RUN useradd --user-group --create-home --shell /bin/false app
+ENV HOME=/home/app
+WORKDIR $HOME/src
 
-ARG NPM_TOKEN
+COPY .babelrc .eslintrc.json package.json npm-shrinkwrap.json webpack.config.js ./
+RUN npm install --ignore-scripts
+COPY ./src ./src
+COPY ./test ./test
 
-ENV HOME=/opt/app
-WORKDIR /opt/app
-
-COPY package.json npm-shrinkwrap.json /opt/app/
-RUN npm install
-COPY . /opt/app
-
-CMD npm run coverage
+CMD npm test

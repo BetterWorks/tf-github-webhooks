@@ -1,34 +1,46 @@
 # lambda function that proceses incoming webhooks from github, verifies signature
 # and publishes to sns
 resource "aws_lambda_function" "publish" {
-  function_name    = "${var.name}"
-  description      = "publish github events to sns"
-  role             = "${aws_iam_role.publish.arn}"
-  handler          = "publish.handler"
-  memory_size      = "128"
-  timeout          = "10"
-  filename         = "${path.module}/../dist/publish.zip"
-  source_code_hash = "${data.archive_file.publish.output_base64sha256}"
-  runtime          = "nodejs6.10"
+  function_name = "${var.name}"
+  description   = "publish github events to sns"
+  handler       = "publish.handler"
+  memory_size   = "${var.memory_size}"
+  role          = "${aws_iam_role.publish.arn}"
+  runtime       = "nodejs6.10"
+  s3_bucket     = "${var.s3_bucket}"
+  s3_key        = "${var.s3_key}"
+  timeout       = "${var.timeout}"
 
   environment {
     variables = {
-      SECRET        = "${random_id.github_secret.hex}"
-      SNS_TOPIC_ARN = "${aws_sns_topic.github.arn}"
+      CONFIG_PARAMETER_NAMES = "${var.config_parameter_name}"
+      DEBUG                  = "${var.debug}"
+      NODE_ENV               = "${var.node_env}"
     }
   }
-}
-
-# generate artifact for lambda function source code
-data "archive_file" "publish" {
-  type        = "zip"
-  source_file = "${path.module}/../dist/publish.js"
-  output_path = "${path.module}/../dist/publish.zip"
 }
 
 # generate a secret to use for signing webhook payloads
 resource "random_id" "github_secret" {
   byte_length = 16
+}
+
+# define encrypted configuration parameter
+resource "aws_ssm_parameter" "configuration" {
+  name  = "${var.config_parameter_name}"
+  type  = "SecureString"
+  value = "${data.template_file.configuration.rendered}"
+}
+
+# render configuration as json
+data "template_file" "configuration" {
+  template = "${file("${path.module}/configuration.json")}"
+
+  vars {
+    github_secret = "${random_id.github_secret.hex}"
+    log_level     = "${var.log_level}"
+    sns_topic_arn = "${aws_sns_topic.github.arn}"
+  }
 }
 
 # include cloudwatch log group resource definition in order to ensure it is
@@ -39,8 +51,7 @@ resource "aws_cloudwatch_log_group" "publish" {
 
 # iam role for publish lambda function
 resource "aws_iam_role" "publish" {
-  name = "${var.name}"
-
+  name               = "${var.name}"
   assume_role_policy = "${data.aws_iam_policy_document.assume_role.json}"
 }
 
@@ -59,12 +70,12 @@ data "aws_iam_policy_document" "assume_role" {
 # iam policy for lambda function allowing it to publish events to SNS and logs
 # to cloudwatch
 resource "aws_iam_policy" "publish" {
-  name = "${var.name}"
-
+  name   = "${var.name}"
   policy = "${data.aws_iam_policy_document.publish.json}"
 }
 
 data "aws_iam_policy_document" "publish" {
+  # allow function to publish to github sns topc
   statement {
     actions = [
       "sns:Publish",
@@ -77,6 +88,20 @@ data "aws_iam_policy_document" "publish" {
     ]
   }
 
+  # allow function to access configuration parameters
+  statement {
+    actions = [
+      "ssm:GetParameter",
+    ]
+
+    effect = "Allow"
+
+    resources = [
+      "arn:aws:ssm:${var.region}:${data.aws_caller_identity.current.account_id}:parameter${aws_ssm_parameter.configuration.name}",
+    ]
+  }
+
+  # allow function to manage cloudwatch logs
   statement {
     actions = [
       "logs:CreateLogGroup",
@@ -91,7 +116,7 @@ data "aws_iam_policy_document" "publish" {
 
 # attach publish policy to publish role
 resource "aws_iam_policy_attachment" "publish" {
-  name       = "codebuild-webhook-publish"
+  name       = "${var.name}"
   roles      = ["${aws_iam_role.publish.name}"]
   policy_arn = "${aws_iam_policy.publish.arn}"
 }

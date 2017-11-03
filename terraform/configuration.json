@@ -1,0 +1,11 @@
+{
+  "github": {
+    "secret": "${github_secret}"
+  },
+  "log": {
+    "level": "${log_level}"
+  },
+  "sns": {
+    "topic_arn": "${sns_topic_arn}"
+  }
+}

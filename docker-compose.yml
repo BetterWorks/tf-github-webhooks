@@ -1,15 +1,20 @@
-version: '2'
+version: '2.1'
 services:
-  ks-tf-github-webhooks:
+  tf-github-webhooks:
     build:
       context: .
       dockerfile: ./test/Dockerfile.test
-    command: npm test
+    command: npm run coverage
     environment:
+      AWS_ACCESS_KEY_ID: xxxxx
+      AWS_REGION: us-west-2
+      AWS_SECRET_ACCESS_KEY: xxxxx
+      CONFIG_PARAMETER_NAMES: foo,bar
+      #DEBUG: app-container*
+      GITHUB_SECRET: SECRET
+      LOG_LEVEL: fatal
       NODE_ENV: test
-      SECRET: 'SECRET'
       SNS_TOPIC_ARN: 'abcdefg'
     volumes:
-      - ./coverage:/opt/app/coverage
-      - ./lib:/opt/app/lib
-      - ./test:/opt/app/test
+      - ./:/home/app/src
+      - /home/app/src/node_modules

@@ -1,0 +1,33 @@
+/**
+ * @module config
+ * @overview encrypted configuration provider
+ */
+import get from 'lodash/get';
+
+export const inject = {
+  name: 'config',
+  require: ['ssm'],
+};
+
+export default async function (ssm) {
+  // fetch configuration from secure parameter store
+  const data = await Promise.race([
+    ssm.getParameter({
+      Name: process.env.CONFIG_PARAMETER_NAME,
+      WithDecryption: true,
+    }).promise(),
+    new Promise(resolve => setTimeout(resolve, 30000)),
+  ]);
+
+  // parse configuration and merge together
+  const config = JSON.parse(data.Parameter.Value);
+
+  return {
+    /**
+     * Expose a getter method for retrieiving portions of the decrypted
+     * configuration tree
+     * @param {String} path - path using dot notation
+     */
+    get: get.bind(null, config),
+  };
+}

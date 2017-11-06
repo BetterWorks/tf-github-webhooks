@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="2.0.0"></a>
+# [2.0.0](https://github.com/cludden/tf-github-webhooks/compare/v1.2.0...v2.0.0) (2017-11-06)
+
+
+### Features
+
+* refactors function to use encrypted configuration ([3a6e506](https://github.com/cludden/tf-github-webhooks/commit/3a6e506))
+
+
+### BREAKING CHANGES
+
+* artifact generation no longer included in terraform module
+
+
+
 <a name="1.2.0"></a>
 # [1.2.0](https://github.com/cludden/ks-tf-github-webhooks/compare/v1.1.1...v1.2.0) (2017-10-11)
 

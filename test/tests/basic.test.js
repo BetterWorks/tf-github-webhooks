@@ -79,10 +79,13 @@ describe('[integration] basic', function () {
 
   it('should succeed (200) with SNS message id', async function () {
     const MessageId = 'abcdefg';
-    this.sandbox.stub(this.sns.sns(), 'publish').returns({
+    const stub = this.sandbox.stub(this.sns.sns(), 'publish').returns({
       promise: sinon.stub().resolves({ MessageId }),
     });
     const res = await fromCallback(done => handler(webhookEvent, {}, done));
+    expect(stub.callCount).to.equal(1);
+    const params = stub.lastCall.args[0];
+    expect(params).to.have.property('Subject', webhookEvent.headers['X-GitHub-Event']);
     expect(res).to.have.property('statusCode', 200);
     expect(res).to.have.nested.property('headers.Content-Type', 'application/json');
     expect(res).to.have.property('body').that.is.a('string');

@@ -20,7 +20,7 @@
     "X-Forwarded-Port": "443",
     "X-Forwarded-Proto": "https",
     "X-GitHub-Delivery": "39073f80-3951-11e7-99a8-9b9aaf684419",
-    "X-GitHub-Event": "ping",
+    "X-GitHub-Event": "release",
     "X-Hub-Signature": "sha1=a68544d8b470cd445f7fd2ab0b62c668a501cd8c"
   },
   "queryStringParameters": null,

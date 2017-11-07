@@ -45,6 +45,7 @@ export async function handler(e, ctx, done) {
 export async function processEvent(e, { github, sns }) {
   const signature = github.parseSignature(e);
   const body = get(e, 'body');
+  const eventName = get(e, 'headers.X-GitHub-Event');
   github.verifySignature(signature, body);
-  return sns.publish(body);
+  return sns.publish({ message: body, subject: eventName });
 }

@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="2.0.1"></a>
+## [2.0.1](https://github.com/cludden/tf-github-webhooks/compare/v2.0.0...v2.0.1) (2017-11-07)
+
+
+### Bug Fixes
+
+* removes terraform block from module definition ([e7cd1c0](https://github.com/cludden/tf-github-webhooks/commit/e7cd1c0))
+
+
+
 <a name="2.0.0"></a>
 # [2.0.0](https://github.com/cludden/tf-github-webhooks/compare/v1.2.0...v2.0.0) (2017-11-06)
 

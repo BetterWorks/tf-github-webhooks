@@ -1,6 +1,6 @@
 {
   "name": "tf-github-webhooks",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "tf project for codebuild webhook infrastructure",
   "main": "index.js",
   "scripts": {

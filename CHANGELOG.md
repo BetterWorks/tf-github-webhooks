@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="2.1.2"></a>
+## [2.1.2](https://github.com/cludden/tf-github-webhooks/compare/v2.1.1...v2.1.2) (2017-11-08)
+
+
+### Bug Fixes
+
+* fix incorrect lambda function environment variable name ([91fbb2f](https://github.com/cludden/tf-github-webhooks/commit/91fbb2f))
+
+
+
 <a name="2.1.1"></a>
 ## [2.1.1](https://github.com/cludden/tf-github-webhooks/compare/v2.1.0...v2.1.1) (2017-11-08)
 

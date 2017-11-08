@@ -3,7 +3,7 @@
 resource "aws_lambda_function" "publish" {
   function_name = "${var.name}"
   description   = "publish github events to sns"
-  handler       = "publish.handler"
+  handler       = "index.handler"
   memory_size   = "${var.memory_size}"
   role          = "${aws_iam_role.publish.arn}"
   runtime       = "nodejs6.10"

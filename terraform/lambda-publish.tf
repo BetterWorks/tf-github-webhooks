@@ -13,7 +13,7 @@ resource "aws_lambda_function" "publish" {
 
   environment {
     variables = {
-      CONFIG_PARAMETER_NAMES = "${var.config_parameter_name}"
+      CONFIG_PARAMETER_NAME = "${var.config_parameter_name}"
       DEBUG                  = "${var.debug}"
       NODE_ENV               = "${var.node_env}"
     }

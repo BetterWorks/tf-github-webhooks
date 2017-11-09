@@ -19,6 +19,9 @@ export const SUCCESS = 'event:success';
  * @return {Promise}
  */
 export async function handler(e, ctx, done) {
+  // freeze the node process immediately on exit
+  // see http://docs.aws.amazon.com/lambda/latest/dg/nodejs-prog-model-using-old-runtime.html
+  ctx.callbackWaitsForEmptyEventLoop = false;
   const modules = await container.load({
     github: 'github',
     log: 'log',

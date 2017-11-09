@@ -78,9 +78,14 @@ describe('[integration] basic', function () {
   });
 
   it('should succeed (200) with SNS message id', async function () {
-    const MessageId = 'abcdefg';
+    const MessageId = 'dc365e9d-1a1d-5f3d-8c39-0ce0b5ae410a';
     const stub = this.sandbox.stub(this.sns.sns(), 'publish').returns({
-      promise: sinon.stub().resolves({ MessageId }),
+      promise: sinon.stub().resolves({
+        ResponseMetadata: {
+          RequestId: 'fb850c2e-2940-5353-a40e-5e5386f30d64',
+        },
+        MessageId,
+      }),
     });
     const res = await fromCallback(done => handler(webhookEvent, {}, done));
     expect(stub.callCount).to.equal(1);

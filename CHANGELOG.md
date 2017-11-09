@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="2.1.3"></a>
+## [2.1.3](https://github.com/cludden/tf-github-webhooks/compare/v2.1.2...v2.1.3) (2017-11-09)
+
+
+### Bug Fixes
+
+* allows ssm parameter to be updated ([14e3edf](https://github.com/cludden/tf-github-webhooks/commit/14e3edf))
+
+
+
 <a name="2.1.2"></a>
 ## [2.1.2](https://github.com/cludden/tf-github-webhooks/compare/v2.1.1...v2.1.2) (2017-11-08)
 

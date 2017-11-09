@@ -14,8 +14,8 @@ resource "aws_lambda_function" "publish" {
   environment {
     variables = {
       CONFIG_PARAMETER_NAME = "${var.config_parameter_name}"
-      DEBUG                  = "${var.debug}"
-      NODE_ENV               = "${var.node_env}"
+      DEBUG                 = "${var.debug}"
+      NODE_ENV              = "${var.node_env}"
     }
   }
 }
@@ -27,9 +27,10 @@ resource "random_id" "github_secret" {
 
 # define encrypted configuration parameter
 resource "aws_ssm_parameter" "configuration" {
-  name  = "${var.config_parameter_name}"
-  type  = "SecureString"
-  value = "${data.template_file.configuration.rendered}"
+  name      = "${var.config_parameter_name}"
+  type      = "SecureString"
+  value     = "${data.template_file.configuration.rendered}"
+  overwrite = true
 }
 
 # render configuration as json

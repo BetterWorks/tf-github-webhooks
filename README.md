@@ -1,4 +1,4 @@
-# pa-analytics-trainee-progress
+# tf-github-webhooks
 a `node.js` lambda function that publishes authorized github events to SNS
 
 <p align="center">

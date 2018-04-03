@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="2.1.5-beta.0"></a>
+## [2.1.5-beta.0](https://github.com/cludden/tf-github-webhooks/compare/v2.1.4...v2.1.5-beta.0) (2018-04-03)
+
+
+### Bug Fixes
+
+* adds `.editorconfig` ([a82b711](https://github.com/cludden/tf-github-webhooks/commit/a82b711))
+* switches to `yarn` package manager ([0d9e3c3](https://github.com/cludden/tf-github-webhooks/commit/0d9e3c3))
+* updates `config` module to use `[@cludden](https://github.com/cludden)/ssm-config` with validation ([5406ed7](https://github.com/cludden/tf-github-webhooks/commit/5406ed7))
+
+
+
 <a name="2.1.4"></a>
 ## [2.1.4](https://github.com/cludden/tf-github-webhooks/compare/v2.1.3...v2.1.4) (2017-11-09)
 

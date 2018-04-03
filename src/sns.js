@@ -18,7 +18,7 @@ export default function (config) {
    * @param  {String}  Message - sns message
    * @return {Promise}
    */
-  async function publish({ message, subject }) {
+  function publish({ message, subject }) {
     return sns.publish({ Message: message, Subject: subject, TopicArn }).promise();
   }
 

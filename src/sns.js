@@ -10,7 +10,7 @@ export const inject = {
 };
 
 export default function (config) {
-  const TopicArn = config.get('sns.topic_arn');
+  const TopicArn = config.sns.topic_arn;
   const sns = new AWS.SNS();
 
   /**
@@ -18,7 +18,7 @@ export default function (config) {
    * @param  {String}  Message - sns message
    * @return {Promise}
    */
-  async function publish({ message, subject }) {
+  function publish({ message, subject }) {
     return sns.publish({ Message: message, Subject: subject, TopicArn }).promise();
   }
 

@@ -14,7 +14,7 @@ export const inject = {
 };
 
 export default function (config) {
-  const secret = config.get('github.secret');
+  const { secret } = config.github;
 
   /**
    * extract and validate github signature from request headers

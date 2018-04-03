@@ -11,7 +11,11 @@ export const inject = {
   require: ['config'],
 };
 
+export const logger = createLogger({ name, version });
+
 export default function (config) {
-  const options = config.get('log');
-  return createLogger({ ...options, name, version });
+  const options = config.log;
+  const log = logger.child(options);
+  log.level(options.level);
+  return log;
 }

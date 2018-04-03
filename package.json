@@ -2,7 +2,7 @@
   "name": "tf-github-webhooks",
   "version": "2.1.4",
   "description": "tf project for codebuild webhook infrastructure",
-  "main": "index.js",
+  "main": "./dist/index.js",
   "scripts": {
     "build": "rm -rf dist/* && webpack",
     "coverage": "nyc --reporter=lcov npm test",
@@ -12,12 +12,9 @@
     "sec": "nsp check",
     "test": "mocha --recursive --exit test/tests/*.test.js"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/cludden/tf-github-webhooks.git"
-  },
+  "repository": "https://github.com/cludden/tf-github-webhooks.git",
   "author": "chris ludden",
-  "license": "UNLICENSED",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/cludden/tf-github-webhooks/issues"
   },
@@ -54,10 +51,13 @@
     "temp-directory": "./coverage/.nyc_output"
   },
   "dependencies": {
+    "@cludden/ssm-config": "^1.0.3",
+    "ajv": "^6.4.0",
     "app-container": "^1.0.0",
     "aws-sdk": "^2.145.0",
     "bunyan": "^1.8.12",
     "lodash": "https://registry.npmjs.org/lodash/-/lodash-4.17.4.tgz",
     "source-map-support": "https://registry.npmjs.org/source-map-support/-/source-map-support-0.4.15.tgz"
-  }
+  },
+  "private": false
 }

@@ -1,11 +1,11 @@
-FROM node:6
+FROM node:8
 
 RUN useradd --user-group --create-home --shell /bin/false app
 ENV HOME=/home/app
 WORKDIR $HOME/src
 
-COPY .babelrc .eslintrc.json package.json npm-shrinkwrap.json webpack.config.js ./
-RUN npm install --ignore-scripts
+COPY .babelrc .eslintrc.json package.json yarn.lock webpack.config.js ./
+RUN yarn install
 COPY ./src ./src
 COPY ./test ./test
 

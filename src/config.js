@@ -2,32 +2,22 @@
  * @module config
  * @overview encrypted configuration provider
  */
-import get from 'lodash/get';
+import ssmConfig from '@cludden/ssm-config';
 
 export const inject = {
   name: 'config',
-  require: ['ssm'],
+  require: ['ssm', 'validation'],
 };
 
-export default async function (ssm) {
-  // fetch configuration from secure parameter store
-  const data = await Promise.race([
-    ssm.getParameter({
-      Name: process.env.CONFIG_PARAMETER_NAME,
-      WithDecryption: true,
-    }).promise(),
-    new Promise(resolve => setTimeout(resolve, 30000)),
-  ]);
-
-  // parse configuration and merge together
-  const config = JSON.parse(data.Parameter.Value);
-
-  return {
-    /**
-     * Expose a getter method for retrieiving portions of the decrypted
-     * configuration tree
-     * @param {String} path - path using dot notation
-     */
-    get: get.bind(null, config),
-  };
+export default function (ssm, v) {
+  // load configuration from ssm on cold start
+  return ssmConfig({
+    prefix: process.env.CONFIG_PREFIX.split(','),
+    ssm,
+    validate(c) {
+      if (!v.validate('config', c)) {
+        throw new Error(`Invalid Configuration: ${v.errorsText(v.errors)}`);
+      }
+    },
+  });
 }

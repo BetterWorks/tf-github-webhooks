@@ -9,7 +9,7 @@ services:
       AWS_ACCESS_KEY_ID: xxxxx
       AWS_REGION: us-west-2
       AWS_SECRET_ACCESS_KEY: xxxxx
-      CONFIG_PARAMETER_NAMES: foo,bar
+      CONFIG_PREFIX: /foo
       #DEBUG: app-container*
       GITHUB_SECRET: SECRET
       LOG_LEVEL: fatal

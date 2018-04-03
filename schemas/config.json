@@ -1,0 +1,49 @@
+{
+  "$id": "config",
+  "type": "object",
+  "properties": {
+    "github": {
+      "type": "object",
+      "properties": {
+        "secret": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "secret"
+      ]
+    },
+    "log": {
+      "type": "object",
+      "default": {},
+      "properties": {
+        "level": {
+          "enum": [
+            "trace",
+            "debug",
+            "info",
+            "warn",
+            "error",
+            "fatal"
+          ],
+          "default": "info"
+        }
+      }
+    },
+    "sns": {
+      "type": "object",
+      "properties": {
+        "topic_arn": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "topic_arn"
+      ]
+    }
+  },
+  "required": [
+    "github",
+    "sns"
+  ]
+}

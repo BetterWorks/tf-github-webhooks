@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="2.1.5"></a>
+## [2.1.5](https://github.com/cludden/tf-github-webhooks/compare/v2.1.5-beta.0...v2.1.5) (2018-08-27)
+
+
+
 <a name="2.1.5-beta.0"></a>
 ## [2.1.5-beta.0](https://github.com/cludden/tf-github-webhooks/compare/v2.1.4...v2.1.5-beta.0) (2018-04-03)
 

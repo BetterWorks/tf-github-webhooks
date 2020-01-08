@@ -9,7 +9,6 @@
     "lint": "eslint ./src ./test",
     "postversion": "npm run build",
     "release": "standard-version",
-    "sec": "npm audit",
     "test": "mocha --recursive --exit test/tests/*.test.js"
   },
   "repository": "https://github.com/cludden/tf-github-webhooks.git",

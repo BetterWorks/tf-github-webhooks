@@ -37,7 +37,7 @@ describe('[integration] basic', function () {
       sns: 'sns',
     });
     Object.assign(this, modules);
-    this.sandbox = sinon.sandbox.create();
+    this.sandbox = sinon.createSandbox();
   });
 
   afterEach(function () {

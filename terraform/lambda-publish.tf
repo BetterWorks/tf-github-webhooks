@@ -6,7 +6,7 @@ resource "aws_lambda_function" "publish" {
   handler       = "index.handler"
   memory_size   = "${var.memory_size}"
   role          = "${aws_iam_role.publish.arn}"
-  runtime       = "nodejs6.10"
+  runtime       = "nodejs12.14.1"
   s3_bucket     = "${var.s3_bucket}"
   s3_key        = "${var.s3_key}"
   timeout       = "${var.timeout}"

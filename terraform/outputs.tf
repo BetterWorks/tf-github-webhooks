@@ -3,10 +3,11 @@ output "github_url" {
 }
 
 output "github_secret" {
-  value     = "${random_id.github_secret.hex}"
+  value     = random_id.github_secret.hex
   sensitive = true
 }
 
 output "sns_topic_arn" {
-  value = "${aws_sns_topic.github.arn}"
+  value = aws_sns_topic.github.arn
 }
+

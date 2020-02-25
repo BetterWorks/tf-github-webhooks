@@ -1,21 +1,21 @@
 # lambda function that proceses incoming webhooks from github, verifies signature
 # and publishes to sns
 resource "aws_lambda_function" "publish" {
-  function_name = "${var.name}"
+  function_name = var.name
   description   = "publish github events to sns"
   handler       = "index.handler"
-  memory_size   = "${var.memory_size}"
-  role          = "${aws_iam_role.publish.arn}"
+  memory_size   = var.memory_size
+  role          = aws_iam_role.publish.arn
   runtime       = "nodejs12.14.1"
-  s3_bucket     = "${var.s3_bucket}"
-  s3_key        = "${var.s3_key}"
-  timeout       = "${var.timeout}"
+  s3_bucket     = var.s3_bucket
+  s3_key        = var.s3_key
+  timeout       = var.timeout
 
   environment {
     variables = {
-      CONFIG_PARAMETER_NAME = "${var.config_parameter_name}"
-      DEBUG                 = "${var.debug}"
-      NODE_ENV              = "${var.node_env}"
+      CONFIG_PARAMETER_NAME = var.config_parameter_name
+      DEBUG                 = var.debug
+      NODE_ENV              = var.node_env
     }
   }
 }
@@ -27,20 +27,20 @@ resource "random_id" "github_secret" {
 
 # define encrypted configuration parameter
 resource "aws_ssm_parameter" "configuration" {
-  name      = "${var.config_parameter_name}"
+  name      = var.config_parameter_name
   type      = "SecureString"
-  value     = "${data.template_file.configuration.rendered}"
+  value     = data.template_file.configuration.rendered
   overwrite = true
 }
 
 # render configuration as json
 data "template_file" "configuration" {
-  template = "${file("${path.module}/configuration.json")}"
+  template = file("${path.module}/configuration.json")
 
-  vars {
-    github_secret = "${random_id.github_secret.hex}"
-    log_level     = "${var.log_level}"
-    sns_topic_arn = "${aws_sns_topic.github.arn}"
+  vars = {
+    github_secret = random_id.github_secret.hex
+    log_level     = var.log_level
+    sns_topic_arn = aws_sns_topic.github.arn
   }
 }
 
@@ -52,8 +52,8 @@ resource "aws_cloudwatch_log_group" "publish" {
 
 # iam role for publish lambda function
 resource "aws_iam_role" "publish" {
-  name               = "${var.name}"
-  assume_role_policy = "${data.aws_iam_policy_document.assume_role.json}"
+  name               = var.name
+  assume_role_policy = data.aws_iam_policy_document.assume_role.json
 }
 
 data "aws_iam_policy_document" "assume_role" {
@@ -71,8 +71,8 @@ data "aws_iam_policy_document" "assume_role" {
 # iam policy for lambda function allowing it to publish events to SNS and logs
 # to cloudwatch
 resource "aws_iam_policy" "publish" {
-  name   = "${var.name}"
-  policy = "${data.aws_iam_policy_document.publish.json}"
+  name   = var.name
+  policy = data.aws_iam_policy_document.publish.json
 }
 
 data "aws_iam_policy_document" "publish" {
@@ -85,7 +85,7 @@ data "aws_iam_policy_document" "publish" {
     effect = "Allow"
 
     resources = [
-      "${aws_sns_topic.github.arn}",
+      aws_sns_topic.github.arn,
     ]
   }
 
@@ -117,7 +117,8 @@ data "aws_iam_policy_document" "publish" {
 
 # attach publish policy to publish role
 resource "aws_iam_policy_attachment" "publish" {
-  name       = "${var.name}"
-  roles      = ["${aws_iam_role.publish.name}"]
-  policy_arn = "${aws_iam_policy.publish.arn}"
+  name       = var.name
+  roles      = [aws_iam_role.publish.name]
+  policy_arn = aws_iam_policy.publish.arn
 }
+

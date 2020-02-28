@@ -1,3 +1,14 @@
+locals {
+  convert_lambda_file = "placeholder.js"
+}
+
+data "archive_file" "tf_github_webhooks_file" {
+  type        = "zip"
+  source_file = "${path.module}/${local.convert_lambda_file}"
+  output_path = "${path.module}/${local.convert_lambda_file}.zip"
+}
+
+# TODO: make sure that this doesn't overwrite the deployed handler
 # lambda function that proceses incoming webhooks from github, verifies signature
 # and publishes to sns
 resource "aws_lambda_function" "publish" {
@@ -6,9 +17,8 @@ resource "aws_lambda_function" "publish" {
   handler       = "index.handler"
   memory_size   = var.memory_size
   role          = aws_iam_role.publish.arn
-  runtime       = "nodejs12.14.1"
-  s3_bucket     = var.s3_bucket
-  s3_key        = var.s3_key
+  runtime       = "nodejs12.x"
+  filename      = data.archive_file.tf_github_webhooks_file.output_path
   timeout       = var.timeout
 
   environment {

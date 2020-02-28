@@ -35,7 +35,7 @@ variable "node_env" {
 variable "region" {
   type        = string
   description = "AWS region"
-  default     = "us-west-2"
+  default     = "us-east-1"
 }
 
 variable "s3_bucket" {
@@ -54,3 +54,4 @@ variable "timeout" {
   default     = 10
 }
 
+variable "aws_assume_role_arn" {}

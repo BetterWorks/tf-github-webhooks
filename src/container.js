@@ -24,6 +24,6 @@ const container = new Container({
   defaults: { singleton: true },
 });
 
-modules.forEach(mod => container.register(mod, mod.inject));
+modules.forEach((mod) => container.register(mod, mod.inject));
 
 export default container;

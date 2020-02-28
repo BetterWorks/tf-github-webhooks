@@ -1,4 +1,4 @@
-version: '2.1'
+version: '3.5'
 services:
   tf-github-webhooks:
     build:
@@ -16,5 +16,5 @@ services:
       NODE_ENV: test
       SNS_TOPIC_ARN: 'abcdefg'
     volumes:
-      - ./:/home/app/src
-      - /home/app/src/node_modules
+      - ./:/home/app
+        - /home/app/node_modules

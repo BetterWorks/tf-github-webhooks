@@ -12,9 +12,11 @@ phases:
   build:
     commands:
       - npm run build
+  post_build:
+    commands:
+      - mv dist/tf-github-webhooks.zip dist/tf-github-webhooks-$BUILD_TAG.zip
 
 artifacts:
   files:
-    - "dist/tf-github-webhooks.zip"
-  name: tf-github-webhooks-$BUILD_TAG.zip
-  discard-paths: no
+    - "dist/*.zip"
+  discard-paths: yes

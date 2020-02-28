@@ -16,4 +16,4 @@ phases:
 artifacts:
   files:
     - "dist/tf-github-webhooks.zip"
-  name: tf-github-webhooks-$BUILD_TAG.zip
+  name: tf-github-webhooks/tf-github-webhooks-$BUILD_TAG.zip

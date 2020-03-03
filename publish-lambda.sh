@@ -4,7 +4,7 @@ set -e
 if [[ $CODEBUILD_WEBHOOK_EVENT == 'PULL_REQUEST_MERGED' ]] || [[ $BUILD_TYPE = 'manual' ]]; then
 
   echo "PUSH LAMBDA PACKAGE"
-  aws s3api put-object --bucket $DEPLOY_BUCKET --body $PACKAGE_FILE --key tf-github-webhooks/$PACKAGE_FILE
+  aws s3api put-object --bucket $DEPLOY_BUCKET --body dist/$PACKAGE_FILE --key tf-github-webhooks/$PACKAGE_FILE
 
   echo "DEPLOY LAMBDA"
   build_id=$(aws codebuild start-build --project-name tf-github-webhooks-publish --environment-variables-override name=FUNCTION_NAME,value=tf-github-webhooks,name=DEPLOY_BUCKET,value=$DEPLOY_BUCKET,name=PACKAGE_FILE,value=$PACKAGE_FILE | jq -r '.build.id')

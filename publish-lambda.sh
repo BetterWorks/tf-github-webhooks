@@ -7,12 +7,12 @@ if [[ $CODEBUILD_WEBHOOK_EVENT == 'PULL_REQUEST_MERGED' ]] || [[ $BUILD_TYPE = '
   aws s3api put-object --bucket $DEPLOY_BUCKET --body dist/$PACKAGE_FILE --key tf-github-webhooks/$PACKAGE_FILE --debug
 
   echo "DEPLOY LAMBDA"
-  # TODO: need to kick this build off with the resolved source version from the main build
   build_id=$(aws codebuild start-build \
   --project-name tf-github-webhooks-publish \
   --environment-variables-override \
-  name=FUNCTION_NAME,value=tf-github-webhooks,name=DEPLOY_BUCKET,value=$DEPLOY_BUCKET,name=PACKAGE_FILE,value=$PACKAGE_FILE \
+  name=FUNCTION_NAME,value=tf-github-webhooks name=PACKAGE_FILE,value=$PACKAGE_FILE \
   --source-version $CODEBUILD_RESOLVED_SOURCE_VERSION \
+  --debug \
   | jq -r '.build.id')
   echo "Build id: ${build_id}"
   build_status=$(aws codebuild batch-get-builds --ids $build_id | jq -r '.builds[0].buildStatus')

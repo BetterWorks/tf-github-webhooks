@@ -6,5 +6,5 @@ phases:
       docker: 18
   build:
     commands:
-        - aws lambda update-function-code --function-name $FUNCTION_NAME --s3-bucket $DEPLOY_BUCKET --s3-key $PACKAGE_FILE
-        - aws lambda publish-version --function-name $FUNCTION_NAME
+      - aws lambda update-function-code --function-name $FUNCTION_NAME --s3-bucket $DEPLOY_BUCKET --s3-key $FUNCTION_NAME/$PACKAGE_FILE --debug
+      - aws lambda publish-version --function-name $FUNCTION_NAME --debug

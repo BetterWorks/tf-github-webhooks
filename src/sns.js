@@ -10,7 +10,7 @@ export const inject = {
 };
 
 export default function (config) {
-  const TopicArn = config.sns.topic_arn;
+  const TopicArn = config.get('sns.topic_arn');
   const sns = new AWS.SNS();
 
   /**

@@ -41,12 +41,13 @@
     "zip-webpack-plugin": "^3.0.0"
   },
   "dependencies": {
-    "@cludden/ssm-config": "^1.0.3",
     "ajv": "^6.10.2",
     "app-container": "^1.1.2",
     "aws-sdk": "^2.599.0",
     "bunyan": "^1.8.12",
     "lodash": "^4.17.15",
+    "lodash.get": "^4.4.2",
+    "lodash.merge": "^4.6.2",
     "source-map-support": "^0.5.16"
   },
   "private": false

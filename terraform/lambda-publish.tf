@@ -33,7 +33,7 @@ resource "aws_lambda_function" "publish" {
 
   environment {
     variables = {
-      CONFIG_PARAMETER_NAME = aws_ssm_parameter.configuration.name
+      CONFIG_PARAMETER_NAMES = aws_ssm_parameter.configuration.name
       DEBUG                 = var.debug
       NODE_ENV              = var.node_env
     }

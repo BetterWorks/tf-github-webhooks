@@ -13,22 +13,21 @@ import webhookEvent from './webhook-event.json';
 
 before(async function () {
   const ssm = await container.load('ssm');
-  sinon.stub(ssm, 'getParametersByPath').returns({
+  sinon.stub(ssm, 'getParameters').returns({
     promise: sinon.stub().resolves({
       Parameters: [{
-        Name: '/github/secret',
-        Value: process.env.GITHUB_SECRET,
-      }, {
-        Name: '/log/level',
-        Value: process.env.LOG_LEVEL,
-      }, {
-        Name: '/sns/topic_arn',
-        Value: process.env.SNS_TOPIC_ARN,
-      }].map((p) => {
-        // eslint-disable-next-line
-        p.Name = `${process.env.CONFIG_PREFIX}${p.Name}`;
-        return p;
-      }),
+        Value: JSON.stringify({
+          github: {
+            secret: process.env.GITHUB_SECRET,
+          },
+          log: {
+            level: process.env.LOG_LEVEL,
+          },
+          sns: {
+            topic_arn: process.env.SNS_TOPIC_ARN,
+          },
+        }),
+      }],
     }),
   });
 });

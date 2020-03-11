@@ -18,7 +18,6 @@ data "archive_file" "tf_github_webhooks_file" {
   output_path = "${path.module}/${local.convert_lambda_file}.zip"
 }
 
-# TODO: make sure that this doesn't overwrite the deployed handler
 # lambda function that proceses incoming webhooks from github, verifies signature
 # and publishes to sns
 resource "aws_lambda_function" "publish" {
@@ -128,12 +127,24 @@ data "aws_iam_policy_document" "publish" {
   statement {
     actions = [
       "ssm:GetParameter",
+      "ssm:GetParameters",
     ]
 
     effect = "Allow"
 
     resources = [
       "arn:aws:ssm:${var.region}:${data.aws_caller_identity.current.account_id}:parameter${aws_ssm_parameter.configuration.name}",
+    ]
+  }
+
+  statement {
+    actions = [
+      "kms:Decrypt"
+    ]
+    effect = "Allow"
+
+    resources = [
+      "*"
     ]
   }
 

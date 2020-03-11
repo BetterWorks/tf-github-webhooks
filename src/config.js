@@ -12,7 +12,6 @@ export const inject = {
 
 export default async function (ssm) {
   // fetch configuration from secure parameter store
-  console.log(`config param names: ${process.env.CONFIG_PARAMETER_NAMES}`);
   const data = await Promise.race([
     ssm.getParameters({
       Names: process.env.CONFIG_PARAMETER_NAMES.split(','),
@@ -21,11 +20,8 @@ export default async function (ssm) {
     new Promise((resolve) => setTimeout(resolve, 30000)),
   ]);
 
-  console.log(`data: ${JSON.stringify(data)}`);
-  console.log(`parameters: ${JSON.stringify(data.Parameters)}`);
   // parse configuration and merge together
   const config = data.Parameters.reduce((acc, p) => {
-    console.log(`p.Value: ${p.Value}`);
     merge(acc, JSON.parse(p.Value));
     return acc;
   }, {});

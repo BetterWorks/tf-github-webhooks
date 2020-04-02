@@ -1,6 +1,14 @@
+module "cicd_tf_github_webhooks_api_gateway_label" {
+  source     = "git::https://github.com/betterworks/terraform-null-label.git?ref=tags/0.12.0"
+  namespace  = var.namespace
+  stage      = var.stage
+  name       = "cicd"
+  attributes = ["api", "gateway", "tf-github-webhooks"]
+}
+
 # base api gateway resource
 resource "aws_api_gateway_rest_api" "github" {
-  name        = var.name
+  name        = module.cicd_tf_github_webhooks_api_gateway_label.id
   description = "API for github webhooks"
 }
 
@@ -46,7 +54,7 @@ resource "aws_api_gateway_integration" "publish" {
   resource_id = aws_api_gateway_resource.publish.id
   http_method = aws_api_gateway_method.publish.http_method
   type        = "AWS_PROXY"
-  uri         = "arn:aws:apigateway:${var.region}:lambda:path/2015-03-31/functions/${aws_lambda_function.publish.arn}/invocations"
+  uri         = aws_lambda_function.publish.invoke_arn
 
   #  credentials             = "${aws_iam_role.publish.arn}"
   integration_http_method = "POST"

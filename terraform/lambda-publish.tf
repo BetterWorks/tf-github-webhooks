@@ -1,3 +1,23 @@
+data "terraform_remote_state" "chamber" {
+  backend = "s3"
+
+  config = {
+    bucket = "${var.namespace}-${var.stage}-terraform-state"
+    key    = "chamber/terraform.tfstate"
+  }
+}
+
+locals {
+  convert_lambda_file = "placeholder.js"
+  chamber_kms_key_arn = data.terraform_remote_state.chamber.outputs.chamber_kms_key_alias_arn
+}
+
+data "archive_file" "tf_github_webhooks_file" {
+  type        = "zip"
+  source_file = "${path.module}/${local.convert_lambda_file}"
+  output_path = "${path.module}/${local.convert_lambda_file}.zip"
+}
+
 # lambda function that proceses incoming webhooks from github, verifies signature
 # and publishes to sns
 resource "aws_lambda_function" "publish" {
@@ -5,15 +25,14 @@ resource "aws_lambda_function" "publish" {
   description   = "publish github events to sns"
   handler       = "index.handler"
   memory_size   = var.memory_size
-  role          = aws_iam_role.publish.arn
-  runtime       = "nodejs12.14.1"
-  s3_bucket     = var.s3_bucket
-  s3_key        = var.s3_key
+  role          = aws_iam_role.lambda_role.arn
+  runtime       = "nodejs12.x"
+  filename      = data.archive_file.tf_github_webhooks_file.output_path
   timeout       = var.timeout
 
   environment {
     variables = {
-      CONFIG_PARAMETER_NAME = var.config_parameter_name
+      CONFIG_PARAMETER_NAMES = aws_ssm_parameter.configuration.name
       DEBUG                 = var.debug
       NODE_ENV              = var.node_env
     }
@@ -25,10 +44,22 @@ resource "random_id" "github_secret" {
   byte_length = 16
 }
 
+# TODO: see if we should be using labels for ssm parameters
+module "cicd_tf_github_webhooks_config_label" {
+  source     = "git::https://github.com/betterworks/terraform-null-label.git?ref=tags/0.12.0"
+  namespace  = var.namespace
+  stage      = var.stage
+  name       = "cicd"
+  attributes = ["proxy", "tf_github_webhooks_config"]
+  delimiter  = "/"
+  regex_replace_chars = "/[^a-zA-Z0-9-/_]/"
+}
+
 # define encrypted configuration parameter
 resource "aws_ssm_parameter" "configuration" {
-  name      = var.config_parameter_name
+  name      = "/${var.namespace}/${var.stage}/cicd/proxy/tf_github_webhooks_config" # "/${module.cicd_tf_github_webhooks_config_label.id}"
   type      = "SecureString"
+  key_id    = local.chamber_kms_key_arn
   value     = data.template_file.configuration.rendered
   overwrite = true
 }
@@ -50,9 +81,16 @@ resource "aws_cloudwatch_log_group" "publish" {
   name = "/aws/lambda/${var.name}"
 }
 
-# iam role for publish lambda function
-resource "aws_iam_role" "publish" {
-  name               = var.name
+module "cicd_lambda_role_label" {
+  source              = "git::https://github.com/betterworks/terraform-null-label.git?ref=tags/0.12.0"
+  namespace           = var.namespace
+  stage               = var.stage
+  name                = "lambda"
+  attributes          = ["role", "tf-github-webhooks"]
+}
+
+resource "aws_iam_role" "lambda_role" {
+  name               = module.cicd_lambda_role_label.id
   assume_role_policy = data.aws_iam_policy_document.assume_role.json
 }
 
@@ -68,15 +106,12 @@ data "aws_iam_policy_document" "assume_role" {
   }
 }
 
-# iam policy for lambda function allowing it to publish events to SNS and logs
-# to cloudwatch
 resource "aws_iam_policy" "publish" {
-  name   = var.name
+  name   = "${module.cicd_lambda_role_label.id}-publish-policy"
   policy = data.aws_iam_policy_document.publish.json
 }
 
 data "aws_iam_policy_document" "publish" {
-  # allow function to publish to github sns topc
   statement {
     actions = [
       "sns:Publish",
@@ -89,10 +124,10 @@ data "aws_iam_policy_document" "publish" {
     ]
   }
 
-  # allow function to access configuration parameters
   statement {
     actions = [
       "ssm:GetParameter",
+      "ssm:GetParameters",
     ]
 
     effect = "Allow"
@@ -102,7 +137,17 @@ data "aws_iam_policy_document" "publish" {
     ]
   }
 
-  # allow function to manage cloudwatch logs
+  statement {
+    actions = [
+      "kms:Decrypt"
+    ]
+    effect = "Allow"
+
+    resources = [
+      "*"
+    ]
+  }
+
   statement {
     actions = [
       "logs:CreateLogGroup",
@@ -115,10 +160,9 @@ data "aws_iam_policy_document" "publish" {
   }
 }
 
-# attach publish policy to publish role
 resource "aws_iam_policy_attachment" "publish" {
-  name       = var.name
-  roles      = [aws_iam_role.publish.name]
+  name       = "${module.cicd_lambda_role_label.id}-policy-attachment"
+  roles      = [aws_iam_role.lambda_role.name]
   policy_arn = aws_iam_policy.publish.arn
 }
 

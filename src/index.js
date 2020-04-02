@@ -6,7 +6,6 @@ import 'source-map-support/register';
 import get from 'lodash/get';
 
 import container from './container';
-import { logger } from './log';
 import { sendResponse } from './utils';
 
 export const ERROR = 'event:error';
@@ -23,14 +22,13 @@ export async function handler(e, ctx, done) {
   // freeze the node process immediately on exit
   // see http://docs.aws.amazon.com/lambda/latest/dg/nodejs-prog-model-using-old-runtime.html
   ctx.callbackWaitsForEmptyEventLoop = false;
-  let log = logger;
+  const modules = await container.load({
+    github: 'github',
+    log: 'log',
+    sns: 'sns',
+  });
+  const log = modules.log.child({ req_id: ctx.awsRequestId });
   try {
-    const modules = await container.load({
-      github: 'github',
-      log: 'log',
-      sns: 'sns',
-    });
-    log = modules.log.child({ req_id: ctx.awsRequestId });
     log.debug({ event: e }, 'event:received');
     const result = await processEvent(e, { ...modules, log });
     log.debug({ result }, 'event:result');

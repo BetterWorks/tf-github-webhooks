@@ -1,8 +1,3 @@
-variable "config_parameter_name" {
-  type        = string
-  description = "ssm parameter name"
-}
-
 variable "debug" {
   type        = string
   description = "node debug flag"
@@ -35,17 +30,7 @@ variable "node_env" {
 variable "region" {
   type        = string
   description = "AWS region"
-  default     = "us-west-2"
-}
-
-variable "s3_bucket" {
-  type        = string
-  description = "name of artifact s3 bucket"
-}
-
-variable "s3_key" {
-  type        = string
-  description = "name of artifact s3 key"
+  default     = "us-east-1"
 }
 
 variable "timeout" {
@@ -54,3 +39,14 @@ variable "timeout" {
   default     = 10
 }
 
+variable "aws_assume_role_arn" {}
+
+variable "namespace" {
+  type        = string
+  description = "Namespace (e.g. `cp` or `cloudposse`)"
+}
+
+variable "stage" {
+  type        = string
+  description = "Stage (e.g. `prod`, `dev`, `staging`)"
+}

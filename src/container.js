@@ -9,7 +9,6 @@ import * as github from './github';
 import * as log from './log';
 import * as sns from './sns';
 import * as ssm from './ssm';
-import * as validation from './validation';
 
 const modules = [
   config,
@@ -17,13 +16,12 @@ const modules = [
   log,
   sns,
   ssm,
-  validation,
 ];
 
 const container = new Container({
   defaults: { singleton: true },
 });
 
-modules.forEach(mod => container.register(mod, mod.inject));
+modules.forEach((mod) => container.register(mod, mod.inject));
 
 export default container;

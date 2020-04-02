@@ -1,4 +1,4 @@
-version: '2.1'
+version: '3.5'
 services:
   tf-github-webhooks:
     build:
@@ -6,15 +6,12 @@ services:
       dockerfile: ./test/Dockerfile.test
     command: npm run coverage
     environment:
-      AWS_ACCESS_KEY_ID: xxxxx
-      AWS_REGION: us-west-2
-      AWS_SECRET_ACCESS_KEY: xxxxx
-      CONFIG_PREFIX: /foo
+      CONFIG_PARAMETER_NAMES: foo,bar
       #DEBUG: app-container*
       GITHUB_SECRET: SECRET
       LOG_LEVEL: fatal
       NODE_ENV: test
       SNS_TOPIC_ARN: 'abcdefg'
     volumes:
-      - ./:/home/app/src
-      - /home/app/src/node_modules
+      - ./:/home/app
+      - /home/app/node_modules
